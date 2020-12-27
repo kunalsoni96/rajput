@@ -69,7 +69,7 @@
                   </select>
                 </div>
 
-                <div class="col-md-6 mb-6">
+                <div class="col-md-12 mb-12">
               <button style=" background: #262D47; margin-bottom: 20px; height: 43px; margin-top: 50px; float: right; border:none;  width:300px; " class="btn btn-info" type="submit">
                 @if(isset($edit->id))
                 Update Now

@@ -10,18 +10,23 @@ use File;
 use Session;
 use Storage;
 use Cookie;
+use Auth;
 class AdmissionController extends Controller
 {
     public function index(){
-        $admission = Admission::orderBy('id', 'DESC')->get();
-         return view("Admin/Admission/Index", ['data'=>$admission]);
+      if(Auth::user()->role=='admin'){
+      $admission = Admission::orderBy('id', 'DESC')->get();
+       return view("Admin/Admission/Index", ['data'=>$admission]);
+      }
+      else{
+        return redirect()->route('Index');
+    }
     }
 
-    public function create(){
-       
-   }
+    
 
    public function store(request $request){
+    if(Auth::user()->role=='admin'){
        $data = new Admission();
        $data->Name = $data->Name;
        $data->Email = $data->Email;
@@ -36,35 +41,55 @@ class AdmissionController extends Controller
        $data->save();
        $request->session()->flash('success','Form Submitted Successfully');
        return redirect()->route('Admission');
+     }
+     else{
+        return redirect()->route('Index');
+    }
    }
 
 
    public function delete(request $request){
+    if(Auth::user()->role=='admin'){
        $delete = Admission::where('id',$request->Delete)->first();
       
        $delete->delete();
 
        $request->session()->flash('success','Your Admission Deleted Successfully!');
        return redirect()->route('Admin/Admission');
+     }
+     else{
+        return redirect()->route('Index');
+    }
    }
 
 
    public function editsession(request $request){
+    if(Auth::user()->role=='admin'){
        Session::put('edit_id', $request->Edit);
        return redirect()->route('Admin/Admission/Edit');
+     }
+     else{
+        return redirect()->route('Index');
+    }
    }
 
    public function edit(request $request){
          /*$cat_id = Category::orderBy('id','desc')->get();
 
         $sub_cat_id = SubCategory::orderBy('id','desc')->get();*/
+        if(Auth::user()->role=='admin'){
        $edit_id = Session::get('edit_id');
        $edit = Admission::where('id',$edit_id)->first();
        return view('Admin.Admission.Add',compact('edit'/*'cat_id','sub_cat_id'*/));
+     }
+     else{
+        return redirect()->route('Index');
+    }
    }
 
 
    public function update(request $request){
+    if(Auth::user()->role=='admin'){
        $update_id  = $request->Update;
        $Testimonial = Testimonial::where('id',$update_id)->first();
 
@@ -85,5 +110,9 @@ class AdmissionController extends Controller
        $Testimonial->save();
        $request->session()->flash('success','Your File Updated Successfully!');
        return redirect()->route('Admin/Testimonials');
+     }
+     else{
+        return redirect()->route('Index');
+    }
    }
 }

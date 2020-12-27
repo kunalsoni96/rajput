@@ -3888,3 +3888,7 @@ $7...')
 #57 C:\\xampp\\htdocs\ajput_backup\\index.php(21): require_once('C:\\\\xampp\\\\htdocs...')
 #58 {main}
 "} 
+[2020-12-25 16:25:38] local.ERROR: Cannot use Auth as Auth because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use Auth as Auth because the name is already in use at C:\\xampp\\htdocs\ajput_backup\\app\\Http\\Controllers\\Admin\\LoginController.php:9)
+[stacktrace]
+#0 {main}
+"} 

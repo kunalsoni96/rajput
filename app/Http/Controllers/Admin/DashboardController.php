@@ -13,11 +13,13 @@ use App\Appointment;
 use App\Admission;
 use App\Contact;
 use App\Order;
+use Auth;
 
 
 class DashboardController extends Controller
 {
     public function index(){
+        if(Auth::user()->role=='admin'){
     	$today_sale = Order::orwhere('DeliveryStatus',1)->orWhere('DeliveryStatus',0)->where('Date',date('Y-m-d'))->count();
     	$all_sale = Order::orwhere('DeliveryStatus',1)->orWhere('DeliveryStatus',0)->count();
     	$cancelled = Order::orwhere('DeliveryStatus',2)->count();
@@ -32,5 +34,9 @@ class DashboardController extends Controller
 
     	return view('Admin.Dashboard',compact('today_sale','all_sale','cancelled','delivered','pending','customer','active_customer','delivered_income','pending_income','admission_fee'));
     }
+    else{
+        return redirect()->route('Index');
+    }
+}
     
 }

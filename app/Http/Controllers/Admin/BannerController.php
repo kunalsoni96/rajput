@@ -8,10 +8,12 @@ use File;
 use Session;
 use Storage;
 use Cookie;
+use Auth;
 
 class BannerController extends Controller
 {
     public function index(){
+        if(Auth::user()->role=='admin'){
           $cookie = Cookie::get('shoppingcarts');
         if(isset($cookie)){
         $cookie_data = json_decode($cookie);
@@ -24,8 +26,13 @@ class BannerController extends Controller
     	$data = Banner::orderBy('id','desc')->get();
     	return view('Admin.Banner.Index',compact('data'));
     }
+    else{
+        return redirect()->route('Index');
+    }
+    }
 
     public function create(){
+        if(Auth::user()->role=='admin'){
           $cookie = Cookie::get('shoppingcarts');
         if(isset($cookie)){
         $cookie_data = json_decode($cookie);
@@ -37,9 +44,13 @@ class BannerController extends Controller
         $cart_count = count($cookie_data);
     	return view('Admin.Banner.Add');
     }
+    else{
+        return redirect()->route('Index');
+    }
+    }
 
     public function store(request $request){
-
+        if(Auth::user()->role=='admin'){
     	$data = new Banner;
     	$data->Title = $request->Title;
         $data->Status = $request->Status;
@@ -66,22 +77,37 @@ class BannerController extends Controller
     	$request->session()->flash('success','Your File Uploaded successfully!');
     	return redirect()->route('Admin/Banner');
     }
+    else{
+        return redirect()->route('Index');
+    }
+    }
 
 
     public function delete(request $request){
+        if(Auth::user()->role=='admin'){
     	$delete = Banner::where('id',$request->Delete)->first();
     	$delete->delete();
     	$request->session()->flash('delete','Your File Deleted Successfully!');
     	return redirect()->route('Admin/Banner');
+        }
+    else{
+        return redirect()->route('Index');
+    }
     }
 
 
     public function editsession(request $request){
+        if(Auth::user()->role=='admin'){
     	Session::put('edit_id', $request->Edit);
     	return redirect()->route('Admin/Banner/Edit');
+        }
+        else{
+        return redirect()->route('Index');
+    }
     }
 
     public function edit(request $request){
+        if(Auth::user()->role=='admin'){
           $cookie = Cookie::get('shoppingcarts');
         if(isset($cookie)){
         $cookie_data = json_decode($cookie);
@@ -95,9 +121,14 @@ class BannerController extends Controller
     	$edit = Banner::where('id',$edit_id)->first();
     	return view('Admin.Banner.Add',compact('edit'));
     }
+    else{
+        return redirect()->route('Index');
+    }
+    }
 
 
     public function update(request $request){
+        if(Auth::user()->role=='admin'){
     	$update_id  = $request->Update;
     	$data = Banner::where('id',$update_id)->first();
         $data->Title = $request->Title;
@@ -125,4 +156,8 @@ class BannerController extends Controller
         $request->session()->flash('update','Your File Uploaded successfully!');
         return redirect()->route('Admin/Banner');
     }
+    else{
+        return redirect()->route('Index');
+    }
+}
 }
